@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MON ESPACE | Tlemcen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #05070a;
+            --card-bg: rgba(26, 38, 54, 0.7);
+            --primary: #3b82f6;
+            --secondary: #2dd4bf;
+            --accent: #a855f7;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --danger: #fb7185;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        header { text-align: center; margin-bottom: 40px; }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 100px;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            background: linear-gradient(to right, #fff 30%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+            margin-bottom: 140px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 22px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            animation: slideUp 0.6s ease-out backwards;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            background: rgba(13, 17, 23, 0.9);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .module-name { font-weight: 700; font-size: 1.05rem; color: #fff; }
+        .coeff-tag { font-size: 0.7rem; color: var(--text-dim); background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 8px; font-weight: 600; }
+
+        .inputs-block {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .inputs-row { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); 
+            gap: 8px; 
+        }
+
+        .input-box label { display: block; font-size: 0.6rem; color: var(--text-dim); margin-bottom: 4px; font-weight: 700; text-transform: uppercase; }
+
+        input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        input:focus { outline: none; border-color: var(--primary); background: rgba(59, 130, 246, 0.05); }
+        input::placeholder { color: rgba(255,255,255,0.15); }
+
+        .card-footer {
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .avg-label { font-size: 0.75rem; color: var(--text-dim); font-weight: 500; }
+        
+        .avg-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rattrapage-badge {
+            background: rgba(251, 113, 133, 0.1);
+            border: 1px solid rgba(251, 113, 133, 0.2);
+            color: var(--danger);
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: none;
+        }
+
+        .avg-value { font-weight: 800; font-size: 1.2rem; color: var(--secondary); }
+
+        .bottom-bar {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 650px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(25px);
+            border-radius: 28px;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .final-label { font-size: 0.7rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .final-score { font-size: 2.5rem; font-weight: 800; color: #fff; letter-spacing: -1px; }
+
+        .btn-main {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-main:hover { transform: scale(1.05); background: var(--secondary); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <span class="badge">Espace Étudiant 2026</span>
+        <h1>Dental Calculator</h1>
+        <p style="color: var(--text-dim); margin-top: 10px;">Faculté de Médecine Dentaire - Tlemcen</p>
+    </header>
+
+    <div id="grid" class="grid"></div>
+</div>
+
+<div class="bottom-bar">
+    <div>
+        <p class="final-label">Moyenne Générale (Coeff 37)</p>
+        <div id="global-val" class="final-score">00.00</div>
+    </div>
+    <button class="btn-main" onclick="runGlobal()">Calculer</button>
+</div>
+
+<script>
+    // Configuration complète basée sur image_311b62.png, image_311b83.png et image_311bf8.png
+    const modules = [
+        { n: "OCE", c: 5, emd: 3, tp: 3, f: "oce" },
+        { n: "Prothèse", c: 5, emd: 3, tp: 3, f: "prothese" },
+        { n: "Anatomie Humaine", c: 4, emd: 3, tp: 2, f: "anatomie_h" },
+        { n: "Anatomie Dentaire", c: 3, emd: 3, tp: 3, f: "anatomie_d" },
+        { n: "Parodontologie", c: 3, emd: 2, td: 2, f: "paro" },
+        { n: "ODF", c: 3, emd: 3, f: "odf" },
+        { n: "Pathologie", c: 3, emd: 1, f: "patho" },
+        { n: "Biomatériaux", c: 2, emd: 3, f: "biomateriaux" },
+        { n: "Microbiologie", c: 2, emd: 3, f: "microbiologie" },
+        { n: "Histologie", c: 2, emd: 2, td: 2, f: "histologie" },
+        { n: "Physiologie", c: 1, emd: 1, f: "physiologie" },
+        { n: "Immunologie", c: 1, emd: 1, f: "immunologie" },
+        { n: "Hygiène & Prév.", c: 1, emd: 1, f: "hygiene" },
+        { n: "Langue Anglaise", c: 1, emd: 1, f: "anglais" },
+        { n: "Informatique", c: 1, emd: 3, f: "informatique" }
+    ];
+
+    function render() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+
+        modules.forEach((m, idx) => {
+            let inputsHTML = '';
+            
+            // Génération des inputs EMD
+            if (m.emd > 0) {
+                inputsHTML += `<div class="input-box"><label>Notes EMD</label><div class="inputs-row">`;
+                for(let i=1; i<=m.emd; i++) {
+                    inputsHTML += `<input type="number" id="m-${idx}-emd-${i}" step="0.01" min="0" max="20" placeholder="E${i}" oninput="calculateMod(${idx})">`;
+                }
+                inputsHTML += `</div></div>`;
+            }
+
+            // Génération des inputs TP ou TD s'ils existent
+            if (m.tp > 0) {
+                inputsHTML += `<div class="input-box"><label>Notes TP</label><div class="inputs-row">`;
+                for(let i=1; i<=m.tp; i++) {
+                    inputsHTML += `<input type="number" id="m-${idx}-tp-${i}" step="0.01" min="0" max="20" placeholder="TP${i}" oninput="calculateMod(${idx})">`;
+                }
+                inputsHTML += `</div></div>`;
+            } else if (m.td > 0) {
+                inputsHTML += `<div class="input-box"><label>Notes TD</label><div class="inputs-row">`;
+                for(let i=1; i<=m.td; i++) {
+                    inputsHTML += `<input type="number" id="m-${idx}-td-${i}" step="0.01" min="0" max="20" placeholder="TD${i}" oninput="calculateMod(${idx})">`;
+                }
+                inputsHTML += `</div></div>`;
+            }
+
+            grid.innerHTML += `
+                <div class="card" style="animation-delay: ${idx * 0.03}s">
+                    <div>
+                        <div class="card-header">
+                            <span class="module-name">${m.n}</span>
+                            <span class="coeff-tag">Coeff ${m.c}</span>
+                        </div>
+                        <div class="inputs-block">
+                            ${inputsHTML}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="avg-label">Moyenne</span>
+                        <div class="avg-container">
+                            <span class="rattrapage-badge" id="rat-${idx}">Rattrapage</span>
+                            <span class="avg-value" id="res-${idx}">0.00</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function getVal(id) {
+        return parseFloat(document.getElementById(id)?.value) || 0;
+    }
+
+    function calculateMod(idx) {
+        const m = modules[idx];
+        let moy = 0;
+
+        // Formules spécifiques extraites des images d'illustrations réglementaires
+        switch(m.f) {
+            case "oce":
+            case "prothese":
+            case "anatomie_d":
+                let sumEmd3 = getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`);
+                let sumTp3 = getVal(`m-${idx}-tp-1`) + getVal(`m-${idx}-tp-2`) + getVal(`m-${idx}-tp-3`);
+                moy = (sumEmd3 + 2 * sumTp3) / 9;
+                break;
+            case "anatomie_h":
+                moy = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + (3 * getVal(`m-${idx}-emd-3`)) + (2 * getVal(`m-${idx}-tp-1`)) + (2 * getVal(`m-${idx}-tp-2`))) / 9;
+                break;
+            case "paro":
+            case "histologie":
+                moy = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-td-1`) + getVal(`m-${idx}-td-2`)) / 4;
+                break;
+            case "odf":
+            case "biomateriaux":
+            case "microbiologie":
+            case "informatique":
+                moy = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`)) / 3;
+                break;
+            case "patho":
+            case "physiologie":
+            case "immunologie":
+            case "hygiene":
+            case "anglais":
+                moy = getVal(`m-${idx}-emd-1`);
+                break;
+        }
+
+        const el = document.getElementById(`res-${idx}`);
+        const ratBadge = document.getElementById(`rat-${idx}`);
+        
+        el.innerText = moy.toFixed(2);
+
+        // Application stricte de la charte de couleurs demandée
+        if (moy < 5.00) {
+            el.style.color = 'var(--danger)';
+            ratBadge.style.display = 'inline-block'; // Affiche le badge "Rattrapage"
+        } else if (moy < 10.00) {
+            el.style.color = 'var(--danger)'; // Note inférieure à 10 en rouge
+            ratBadge.style.display = 'none';
+        } else {
+            el.style.color = 'var(--secondary)'; // Note supérieure ou égale à 10 en vert turquoise
+            ratBadge.style.display = 'none';
+        }
+
+        return moy;
+    }
+
+    function runGlobal() {
+        let totalPts = 0;
+        let totalCoeff = 37; // Total bloqué et vérifié à 37 selon vos directives
+
+        modules.forEach((m, idx) => {
+            totalPts += calculateMod(idx) * m.c;
+        });
+
+        const final = totalPts / totalCoeff;
+        const scoreEl = document.getElementById('global-val');
+        
+        // Animation d'incrémentation fluide et futuriste du score global
+        let startTimestamp = performance.now();
+        function animate(now) {
+            const elapsed = now - startTimestamp;
+            const progress = Math.min(elapsed / 800, 1);
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const current = easeOut * final;
+            
+            scoreEl.innerText = current.toFixed(2);
+            scoreEl.style.color = final >= 10 ? '#fff' : 'var(--danger)';
+            
+            if (progress < 1) requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+    }
+
+    render();
+</script>
+
+</body>
+</html>
