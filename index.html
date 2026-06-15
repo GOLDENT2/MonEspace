@@ -201,7 +201,7 @@
 
 <div class="container">
     <header>
-        <span class="badge">Espace Étudiant 2026</span>
+        <span class="badge">Espace Étudiant | Total Coeff 37</span>
         <h1>Dental Calculator</h1>
         <p style="color: var(--text-dim); margin-top: 10px;">Faculté de Médecine Dentaire - Tlemcen</p>
     </header>
@@ -212,29 +212,28 @@
 <div class="bottom-bar">
     <div>
         <p class="final-label">Moyenne Générale (Coeff 37)</p>
-        <div id="global-val" class="final-score">00.00</div>
+        <div id="global-val" class="final-score">00.000</div>
     </div>
     <button class="btn-main" onclick="runGlobal()">Calculer</button>
 </div>
 
 <script>
-    // Configuration complète basée sur image_311b62.png, image_311b83.png et image_311bf8.png
     const modules = [
-        { n: "OCE", c: 5, emd: 3, tp: 3, f: "oce" },
-        { n: "Prothèse", c: 5, emd: 3, tp: 3, f: "prothese" },
-        { n: "Anatomie Humaine", c: 4, emd: 3, tp: 2, f: "anatomie_h" },
-        { n: "Anatomie Dentaire", c: 3, emd: 3, tp: 3, f: "anatomie_d" },
-        { n: "Parodontologie", c: 3, emd: 2, td: 2, f: "paro" },
-        { n: "ODF", c: 3, emd: 3, f: "odf" },
-        { n: "Pathologie", c: 3, emd: 1, f: "patho" },
-        { n: "Biomatériaux", c: 2, emd: 3, f: "biomateriaux" },
-        { n: "Microbiologie", c: 2, emd: 3, f: "microbiologie" },
-        { n: "Histologie", c: 2, emd: 2, td: 2, f: "histologie" },
-        { n: "Physiologie", c: 1, emd: 1, f: "physiologie" },
-        { n: "Immunologie", c: 1, emd: 1, f: "immunologie" },
-        { n: "Hygiène & Prév.", c: 1, emd: 1, f: "hygiene" },
-        { n: "Langue Anglaise", c: 1, emd: 1, f: "anglais" },
-        { n: "Informatique", c: 1, emd: 3, f: "informatique" }
+        { n: "OCE", c: 5, emd: 3, tp: 3, td: 0, f: "oce" },
+        { n: "Prothèse", c: 5, emd: 3, tp: 3, td: 1, f: "prothese" },
+        { n: "Anatomie Humaine", c: 4, emd: 3, tp: 2, td: 0, f: "anatomie_h" },
+        { n: "Anatomie Dentaire", c: 3, emd: 3, tp: 3, td: 0, f: "anatomie_d" },
+        { n: "Parodontologie", c: 3, emd: 2, tp: 0, td: 2, f: "paro" },
+        { n: "ODF", c: 3, emd: 3, tp: 0, td: 0, f: "odf" },
+        { n: "Pathologie", c: 3, emd: 1, tp: 0, td: 0, f: "patho" },
+        { n: "Biomatériaux", c: 2, emd: 3, tp: 0, td: 0, f: "biomateriaux" },
+        { n: "Microbiologie", c: 2, emd: 3, tp: 0, td: 0, f: "microbiologie" },
+        { n: "Histologie", c: 2, emd: 2, tp: 0, td: 2, f: "histologie" },
+        { n: "Physiologie", c: 1, emd: 1, tp: 0, td: 0, f: "physiologie" },
+        { n: "Immunologie", c: 1, emd: 1, tp: 0, td: 0, f: "immunologie" },
+        { n: "Hygiène & Prév.", c: 1, emd: 1, tp: 0, td: 0, f: "hygiene" },
+        { n: "Langue Anglaise", c: 1, emd: 1, tp: 0, td: 1, f: "anglais" },
+        { n: "Informatique", c: 1, emd: 3, tp: 0, td: 0, f: "informatique" }
     ];
 
     function render() {
@@ -244,26 +243,26 @@
         modules.forEach((m, idx) => {
             let inputsHTML = '';
             
-            // Génération des inputs EMD
             if (m.emd > 0) {
                 inputsHTML += `<div class="input-box"><label>Notes EMD</label><div class="inputs-row">`;
                 for(let i=1; i<=m.emd; i++) {
-                    inputsHTML += `<input type="number" id="m-${idx}-emd-${i}" step="0.01" min="0" max="20" placeholder="E${i}" oninput="calculateMod(${idx})">`;
+                    inputsHTML += `<input type="number" id="m-${idx}-emd-${i}" step="0.001" min="0" max="20" placeholder="E${i}" oninput="calculateMod(${idx})">`;
                 }
                 inputsHTML += `</div></div>`;
             }
 
-            // Génération des inputs TP ou TD s'ils existent
+            if (m.td > 0) {
+                inputsHTML += `<div class="input-box"><label>Notes TD</label><div class="inputs-row">`;
+                for(let i=1; i<=m.td; i++) {
+                    inputsHTML += `<input type="number" id="m-${idx}-td-${i}" step="0.001" min="0" max="20" placeholder="TD${i === 1 && m.td === 1 ? '' : i}" oninput="calculateMod(${idx})">`;
+                }
+                inputsHTML += `</div></div>`;
+            }
+
             if (m.tp > 0) {
                 inputsHTML += `<div class="input-box"><label>Notes TP</label><div class="inputs-row">`;
                 for(let i=1; i<=m.tp; i++) {
-                    inputsHTML += `<input type="number" id="m-${idx}-tp-${i}" step="0.01" min="0" max="20" placeholder="TP${i}" oninput="calculateMod(${idx})">`;
-                }
-                inputsHTML += `</div></div>`;
-            } else if (m.td > 0) {
-                inputsHTML += `<div class="input-box"><label>Notes TD</label><div class="inputs-row">`;
-                for(let i=1; i<=m.td; i++) {
-                    inputsHTML += `<input type="number" id="m-${idx}-td-${i}" step="0.01" min="0" max="20" placeholder="TD${i}" oninput="calculateMod(${idx})">`;
+                    inputsHTML += `<input type="number" id="m-${idx}-tp-${i}" step="0.001" min="0" max="20" placeholder="TP${i}" oninput="calculateMod(${idx})">`;
                 }
                 inputsHTML += `</div></div>`;
             }
@@ -283,7 +282,7 @@
                         <span class="avg-label">Moyenne</span>
                         <div class="avg-container">
                             <span class="rattrapage-badge" id="rat-${idx}">Rattrapage</span>
-                            <span class="avg-value" id="res-${idx}">0.00</span>
+                            <span class="avg-value" id="res-${idx}">0.000</span>
                         </div>
                     </div>
                 </div>
@@ -299,14 +298,18 @@
         const m = modules[idx];
         let moy = 0;
 
-        // Formules spécifiques extraites des images d'illustrations réglementaires
         switch(m.f) {
             case "oce":
-            case "prothese":
             case "anatomie_d":
                 let sumEmd3 = getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`);
                 let sumTp3 = getVal(`m-${idx}-tp-1`) + getVal(`m-${idx}-tp-2`) + getVal(`m-${idx}-tp-3`);
                 moy = (sumEmd3 + 2 * sumTp3) / 9;
+                break;
+            case "prothese": 
+                let sumEmdProt = getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`);
+                let tdProt = getVal(`m-${idx}-td-1`);
+                let sumTpProt = getVal(`m-${idx}-tp-1`) + getVal(`m-${idx}-tp-2`) + getVal(`m-${idx}-tp-3`);
+                moy = (sumEmdProt + tdProt + 2 * sumTpProt) / 10;
                 break;
             case "anatomie_h":
                 moy = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + (3 * getVal(`m-${idx}-emd-3`)) + (2 * getVal(`m-${idx}-tp-1`)) + (2 * getVal(`m-${idx}-tp-2`))) / 9;
@@ -321,11 +324,13 @@
             case "informatique":
                 moy = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`)) / 3;
                 break;
+            case "anglais": 
+                moy = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-td-1`)) / 2;
+                break;
             case "patho":
             case "physiologie":
             case "immunologie":
             case "hygiene":
-            case "anglais":
                 moy = getVal(`m-${idx}-emd-1`);
                 break;
         }
@@ -333,17 +338,17 @@
         const el = document.getElementById(`res-${idx}`);
         const ratBadge = document.getElementById(`rat-${idx}`);
         
-        el.innerText = moy.toFixed(2);
+        // Modifié : .toFixed(3) au lieu de .toFixed(2)
+        el.innerText = moy.toFixed(3);
 
-        // Application stricte de la charte de couleurs demandée
         if (moy < 5.00) {
             el.style.color = 'var(--danger)';
-            ratBadge.style.display = 'inline-block'; // Affiche le badge "Rattrapage"
+            ratBadge.style.display = 'inline-block';
         } else if (moy < 10.00) {
-            el.style.color = 'var(--danger)'; // Note inférieure à 10 en rouge
+            el.style.color = 'var(--danger)';
             ratBadge.style.display = 'none';
         } else {
-            el.style.color = 'var(--secondary)'; // Note supérieure ou égale à 10 en vert turquoise
+            el.style.color = 'var(--secondary)';
             ratBadge.style.display = 'none';
         }
 
@@ -352,7 +357,7 @@
 
     function runGlobal() {
         let totalPts = 0;
-        let totalCoeff = 37; // Total bloqué et vérifié à 37 selon vos directives
+        let totalCoeff = 37;
 
         modules.forEach((m, idx) => {
             totalPts += calculateMod(idx) * m.c;
@@ -361,7 +366,6 @@
         const final = totalPts / totalCoeff;
         const scoreEl = document.getElementById('global-val');
         
-        // Animation d'incrémentation fluide et futuriste du score global
         let startTimestamp = performance.now();
         function animate(now) {
             const elapsed = now - startTimestamp;
@@ -369,7 +373,8 @@
             const easeOut = 1 - Math.pow(1 - progress, 3);
             const current = easeOut * final;
             
-            scoreEl.innerText = current.toFixed(2);
+            // Modifié : Affichage final à 3 décimales (.toFixed(3))
+            scoreEl.innerText = current.toFixed(3);
             scoreEl.style.color = final >= 10 ? '#fff' : 'var(--danger)';
             
             if (progress < 1) requestAnimationFrame(animate);
