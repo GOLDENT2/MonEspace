@@ -219,21 +219,21 @@
 
 <script>
     const modules = [
-        { n: "OCE", c: 5, emd: 3, tp: 3, td: 0, f: "oce" },
-        { n: "Prothèse", c: 5, emd: 3, tp: 3, td: 1, f: "prothese" },
-        { n: "Anatomie Humaine", c: 4, emd: 3, tp: 2, td: 0, f: "anatomie_h" },
-        { n: "Anatomie Dentaire", c: 3, emd: 3, tp: 3, td: 0, f: "anatomie_d" },
-        { n: "Parodontologie", c: 3, emd: 2, tp: 0, td: 2, f: "paro" },
-        { n: "ODF", c: 3, emd: 3, tp: 0, td: 0, f: "odf" },
-        { n: "Pathologie", c: 3, emd: 1, tp: 0, td: 0, f: "patho" },
-        { n: "Biomatériaux", c: 2, emd: 3, tp: 0, td: 0, f: "biomateriaux" },
-        { n: "Microbiologie", c: 2, emd: 3, tp: 0, td: 0, f: "microbiologie" },
-        { n: "Histologie", c: 2, emd: 2, tp: 0, td: 2, f: "histologie" },
-        { n: "Physiologie", c: 1, emd: 1, tp: 0, td: 0, f: "physiologie" },
-        { n: "Immunologie", c: 1, emd: 1, tp: 0, td: 0, f: "immunologie" },
-        { n: "Hygiène & Prév.", c: 1, emd: 1, tp: 0, td: 0, f: "hygiene" },
-        { n: "Langue Anglaise", c: 1, emd: 1, tp: 0, td: 1, f: "anglais" },
-        { n: "Informatique", c: 1, emd: 3, tp: 0, td: 0, f: "informatique" }
+        { n: "OCE", c: 5, emd: 3, tp: 3, td: 0, exm_tp: false, f: "oce" },
+        { n: "Prothèse", c: 5, emd: 3, tp: 3, td: 1, exm_tp: false, f: "prothese" },
+        { n: "Anatomie Humaine", c: 4, emd: 3, tp: 2, td: 0, exm_tp: false, f: "anatomie_h" },
+        { n: "Anatomie Dentaire", c: 3, emd: 3, tp: 3, td: 0, exm_tp: true, f: "anatomie_d" },
+        { n: "Parodontologie", c: 3, emd: 2, tp: 0, td: 2, exm_tp: false, f: "paro" },
+        { n: "ODF", c: 3, emd: 3, tp: 0, td: 0, exm_tp: false, f: "odf" },
+        { n: "Pathologie", c: 3, emd: 1, tp: 0, td: 0, exm_tp: false, f: "patho" },
+        { n: "Biomatériaux", c: 2, emd: 3, tp: 0, td: 0, exm_tp: false, f: "biomateriaux" },
+        { n: "Microbiologie", c: 2, emd: 3, tp: 0, td: 0, exm_tp: false, f: "microbiologie" },
+        { n: "Histologie", c: 2, emd: 2, tp: 0, td: 2, exm_tp: false, f: "histologie" },
+        { n: "Physiologie", c: 1, emd: 1, tp: 0, td: 0, exm_tp: false, f: "physiologie" },
+        { n: "Immunologie", c: 1, emd: 1, tp: 0, td: 0, exm_tp: false, f: "immunologie" },
+        { n: "Hygiène & Prév.", c: 1, emd: 1, tp: 0, td: 0, exm_tp: false, f: "hygiene" },
+        { n: "Langue Anglaise", c: 1, emd: 1, tp: 0, td: 1, exm_tp: false, f: "anglais" },
+        { n: "Informatique", c: 1, emd: 3, tp: 0, td: 0, exm_tp: false, f: "informatique" }
     ];
 
     function render() {
@@ -254,8 +254,14 @@
             if (m.td > 0) {
                 inputsHTML += `<div class="input-box"><label>Notes TD</label><div class="inputs-row">`;
                 for(let i=1; i<=m.td; i++) {
-                    inputsHTML += `<input type="number" id="m-${idx}-td-${i}" step="0.001" min="0" max="20" placeholder="TD${i === 1 && m.td === 1 ? '' : i}" oninput="calculateMod(${idx})">`;
+                    inputsHTML += `<input type="number" id="m-${idx}-td-${i}" step="0.001" min="0" max="20" placeholder="TD" oninput="calculateMod(${idx})">`;
                 }
+                inputsHTML += `</div></div>`;
+            }
+
+            if (m.exm_tp) {
+                inputsHTML += `<div class="input-box"><label>Examen TP</label><div class="inputs-row">`;
+                inputsHTML += `<input type="number" id="m-${idx}-exm-tp" step="0.001" min="0" max="20" placeholder="Exm TP" oninput="calculateMod(${idx})">`;
                 inputsHTML += `</div></div>`;
             }
 
@@ -300,7 +306,6 @@
 
         switch(m.f) {
             case "oce":
-            case "anatomie_d":
                 let sumEmd3 = getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`);
                 let sumTp3 = getVal(`m-${idx}-tp-1`) + getVal(`m-${idx}-tp-2`) + getVal(`m-${idx}-tp-3`);
                 moy = (sumEmd3 + 2 * sumTp3) / 9;
@@ -313,6 +318,12 @@
                 break;
             case "anatomie_h":
                 moy = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + (3 * getVal(`m-${idx}-emd-3`)) + (2 * getVal(`m-${idx}-tp-1`)) + (2 * getVal(`m-${idx}-tp-2`))) / 9;
+                break;
+            case "anatomie_d": // Modifié avec la structure exacte de l'image image_9bd9cf.png
+                let numEmd = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`)) / 3;
+                let numTpSub = (getVal(`m-${idx}-tp-1`) + getVal(`m-${idx}-tp-2`) + getVal(`m-${idx}-tp-3`)) / 3;
+                let numTpMain = (2 * getVal(`m-${idx}-exm-tp`) + numTpSub) / 3;
+                moy = (numEmd + 2 * numTpMain) / 3;
                 break;
             case "paro":
             case "histologie":
@@ -338,7 +349,6 @@
         const el = document.getElementById(`res-${idx}`);
         const ratBadge = document.getElementById(`rat-${idx}`);
         
-        // Modifié : .toFixed(3) au lieu de .toFixed(2)
         el.innerText = moy.toFixed(3);
 
         if (moy < 5.00) {
@@ -373,7 +383,6 @@
             const easeOut = 1 - Math.pow(1 - progress, 3);
             const current = easeOut * final;
             
-            // Modifié : Affichage final à 3 décimales (.toFixed(3))
             scoreEl.innerText = current.toFixed(3);
             scoreEl.style.color = final >= 10 ? '#fff' : 'var(--danger)';
             
