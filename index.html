@@ -310,16 +310,17 @@
                 let sumTp3 = getVal(`m-${idx}-tp-1`) + getVal(`m-${idx}-tp-2`) + getVal(`m-${idx}-tp-3`);
                 moy = (sumEmd3 + 2 * sumTp3) / 9;
                 break;
-            case "prothese": 
-                let sumEmdProt = getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`);
+            case "prothese": // Modifié selon {62E1F064-6629-4256-A408-142CC3855231}.png
+                let numEmdProt = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`)) / 3;
                 let tdProt = getVal(`m-${idx}-td-1`);
-                let sumTpProt = getVal(`m-${idx}-tp-1`) + getVal(`m-${idx}-tp-2`) + getVal(`m-${idx}-tp-3`);
-                moy = (sumEmdProt + tdProt + 2 * sumTpProt) / 10;
+                let numTpProt = (getVal(`m-${idx}-tp-1`) + getVal(`m-${idx}-tp-2`) + getVal(`m-${idx}-tp-3`)) / 3;
+                moy = (numEmdProt + tdProt + 2 * numTpProt) / 4;
                 break;
-            case "anatomie_h":
-                moy = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + (3 * getVal(`m-${idx}-emd-3`)) + (2 * getVal(`m-${idx}-tp-1`)) + (2 * getVal(`m-${idx}-tp-2`))) / 9;
+            case "anatomie_h": // Modifié selon {62E1F064-6629-4256-A408-142CC3855231}.png
+                let numEmdAnatH = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`)) / 3;
+                moy = (numEmdAnatH + getVal(`m-${idx}-tp-1`) + getVal(`m-${idx}-tp-2`)) / 3;
                 break;
-            case "anatomie_d": // Modifié avec la structure exacte de l'image image_9bd9cf.png
+            case "anatomie_d":
                 let numEmd = (getVal(`m-${idx}-emd-1`) + getVal(`m-${idx}-emd-2`) + getVal(`m-${idx}-emd-3`)) / 3;
                 let numTpSub = (getVal(`m-${idx}-tp-1`) + getVal(`m-${idx}-tp-2`) + getVal(`m-${idx}-tp-3`)) / 3;
                 let numTpMain = (2 * getVal(`m-${idx}-exm-tp`) + numTpSub) / 3;
